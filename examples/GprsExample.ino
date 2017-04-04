@@ -40,15 +40,15 @@ void setup()
 
 	gprs.openHttpConnection();
 	ModuleSerialGprs::HttpResponse httpResponse = 
-		gprs.sendHttpRequest(HTTP_GET, "httpbin.org/get?param=1&param=2", 6000);	// Choose a method, set the url and the request timeout in milliseconds.
+		gprs.sendHttpRequest(HTTP_GET, "httpbin.org/get?param=1&param=2", 6000);	// Method, url and timeout in milliseconds.
 
 	if (httpResponse.statusCode == 200)
 	{
-		Serial.println(F("HTTP_GET response success!"));
+		Serial.println(F("Request success!"));
 
 		char response[500] = "";
 		int length = httpResponse.contentLength + 50 > 500 ? 
-			450 : httpResponse.contentLength;					// Read the first 450 characters of the response.
+			450 : httpResponse.contentLength;	// Read the first 450 characters of the response.
 
 		gprs.readHttpResponse(length, response, 500);
 
@@ -56,7 +56,7 @@ void setup()
 	}
 	else
 	{
-		Serial.println(F("HTTP failed."));
+		Serial.println(F("Request failed."));
 	}
 
 	gprs.closeHttpConnection();
@@ -72,7 +72,7 @@ void loop()
 
 	if (httpResponse.statusCode == 200)
 	{
-		Serial.println(F("HTTP_POST response success!"));
+		Serial.println(F("Request success!"));
 
 		char response[500] = "";
 		int length = httpResponse.contentLength + 50 > 500 ? 
@@ -84,7 +84,7 @@ void loop()
 	}
 	else
 	{
-		Serial.println(F("HTTP failed."));
+		Serial.println(F("Request failed."));
 	}
 
 	gprs.closeHttpConnection();	
