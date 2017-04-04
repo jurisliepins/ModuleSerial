@@ -68,7 +68,7 @@ if (gsmSms.messageAvailable())
 }
 ```
 
-# 4. Calling
+# 4. Calling and receiving calls
 
 ```
 gsmPhone.callMake(PHONE_NUMBER, 10000);		// Pass a phone number and timeout in milliseconds.
