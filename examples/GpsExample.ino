@@ -6,8 +6,8 @@
 #define LOCAL_PHONE ""
 #define REMOTE_PHONE ""
 
-ModuleSerialCore core(2, 3);
-ModuleSerialGps gps(&core);
+ModuleSerialCore core(2, 3);	// Begin a SoftwareSerial connection on rx and tx pins.
+ModuleSerialGps gps(&core);		// Pass a reference to the core.
 
 void setup() 
 {
@@ -20,7 +20,7 @@ void setup()
 
 	while (notConnected)
 	{
-		// core.debug(&Serial);
+		core.debug(&Serial);		// Pass a reference to HardwareSerial if you want debugging printed to the Serial Monitor.
 
 		if (core.begin(9600) == MODULE_READY &&
 			gps.enable() == GPS_ENABLED)

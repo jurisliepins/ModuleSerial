@@ -10,8 +10,8 @@
 #define LOCAL_PHONE ""
 #define REMOTE_PHONE ""
 
-ModuleSerialCore core(2, 3);
-ModuleSerialGprs gprs(&core);
+ModuleSerialCore core(2, 3);	// Begin a SoftwareSerial connection on rx and tx pins.
+ModuleSerialGprs gprs(&core);	// Pass a reference to the core.
 
 void setup() 
 {
@@ -24,7 +24,7 @@ void setup()
 
 	while (notConnected)
 	{
-		core.debug(&Serial);
+		core.debug(&Serial);	// Pass a reference to HardwareSerial if you want debugging printed to the Serial Monitor.
 
 		if (core.begin(9600) == MODULE_READY &&
 			gprs.enable(APN, APN_USERNAME, APN_PASSWORD) == GPRS_ENABLED)
@@ -40,7 +40,7 @@ void setup()
 
 	gprs.openHttpConnection();
 	ModuleSerialGprs::HttpResponse httpResponse = 
-		gprs.sendHttpRequest(HTTP_GET, "httpbin.org/get?param=1&param=2", 6000);
+		gprs.sendHttpRequest(HTTP_GET, "httpbin.org/get?param=1&param=2", 6000);	// Choose a method, set the url and the request timeout in milliseconds.
 
 	if (httpResponse.statusCode == 200)
 	{
@@ -48,7 +48,7 @@ void setup()
 
 		char response[500] = "";
 		int length = httpResponse.contentLength + 50 > 500 ? 
-			450 : httpResponse.contentLength;
+			450 : httpResponse.contentLength;					// Read the first 450 characters of the response.
 
 		gprs.readHttpResponse(length, response, 500);
 
@@ -72,7 +72,7 @@ void loop()
 
 	if (httpResponse.statusCode == 200)
 	{
-		Serial.println(F("HTTP response success!"));
+		Serial.println(F("HTTP_POST response success!"));
 
 		char response[500] = "";
 		int length = httpResponse.contentLength + 50 > 500 ? 
