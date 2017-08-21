@@ -10,15 +10,15 @@
 class ModuleSerialCore : public SoftwareSerial 
 {
 public:
-	ModuleSerialCore(int rxPin, int txPin);
+    ModuleSerialCore(int rxPin, int txPin);
 
-	void debug(HardwareSerial *printer);
-	int begin(int baudRate);
+    void debug(HardwareSerial *printer);
+    int begin(int baudRate);
 
-	bool writeCommand(const char *command, const char *expected, unsigned long timeout);
-	void writeCommand(const char *command, char *output, int size, unsigned long timeout);
+    bool writeCommand(const char *command, const char *expected, unsigned long timeout);
+    void writeCommand(const char *command, char *output, int size, unsigned long timeout);
 protected:
-	HardwareSerial *printer = nullptr;
+    HardwareSerial *printer = nullptr;
 };
 
 #endif 

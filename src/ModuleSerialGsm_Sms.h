@@ -9,22 +9,22 @@
 class ModuleSerialGsm_Sms : protected ModuleSerialGsm 
 {
 public:
-	ModuleSerialGsm_Sms(ModuleSerialCore *core);
+    ModuleSerialGsm_Sms(ModuleSerialCore *core);
 
-	int enable(const char *pin);
+    int enable(const char *pin);
 
-	bool messageAvailable();
-	void messageSend(const char *number, const char *content);
-	void messageFlush();
+    bool messageAvailable();
+    void messageSend(const char *number, const char *content);
+    void messageFlush();
 
-	void receivedNumber(char *output, int size);
-	void receivedContent(char *output, int size);
+    void receivedNumber(char *output, int size);
+    void receivedContent(char *output, int size);
 
 private:
-	char messageNumber[MESSAGE_NUMBER_LENGTH];
-	char messageContent[MESSAGE_CONTENT_LENGTH];
+    char messageNumber[MESSAGE_NUMBER_LENGTH];
+    char messageContent[MESSAGE_CONTENT_LENGTH];
 
-	void parseMessage(char *message);
+    void parseMessage(char *message);
 };
 
 #endif 

@@ -8,8 +8,8 @@ Complete examples are in the "examples" folder.
 # 1. Initialization 
 
 ```
-ModuleSerialCore core(2, 3);		// Begin a SoftwareSerial connection on rx and tx pins.
-ModuleSerialGsm_Sms gsmSms(&core);	
+ModuleSerialCore core(2, 3);        // Begin a SoftwareSerial connection on rx and tx pins.
+ModuleSerialGsm_Sms gsmSms(&core);  
 ModuleSerialGsm_Phone gsmPhone(&core);
 ModuleSerialGps gps(&core);
 ModuleSerialGprs gprs(&core);
@@ -27,21 +27,21 @@ bool notConnected = true;
 
 while (notConnected)
 {
-  core.debug(&Serial);	// Pass a reference to HardwareSerial if you want debugging printed to the Serial Monitor.
+    core.debug(&Serial);  // Pass a reference to HardwareSerial if you want debugging printed to the Serial Monitor.
 
-  if (core.begin(9600) == MODULE_READY &&
-      gsmSms.enable(PIN_NUMBER) == GSM_ENABLED &&
-      gsmPhone.enable(PIN_NUMBER) == GSM_ENABLED &&
-      gps.enable() == GPS_ENABLED &&
-      gprs.enable(APN, APN_USERNAME, APN_PASSWORD) == GPRS_ENABLED)
-  {
-    notConnected = false;
-  }
-  else 
-  {
-    Serial.println(F("Failed to connect."));
-    delay(1000);
-  }
+    if (core.begin(9600) == MODULE_READY &&
+        gsmSms.enable(PIN_NUMBER) == GSM_ENABLED &&
+        gsmPhone.enable(PIN_NUMBER) == GSM_ENABLED &&
+        gps.enable() == GPS_ENABLED &&
+        gprs.enable(APN, APN_USERNAME, APN_PASSWORD) == GPRS_ENABLED)
+    {
+        notConnected = false;
+    }
+    else 
+    {
+        Serial.println(F("Failed to connect."));
+        delay(1000);
+    }
 }
 ```
   
@@ -52,42 +52,42 @@ gsmSms.messageSend(PHONE_NUMBER, message);
 
 if (gsmSms.messageAvailable())
 {
-  char receivedNumber[30] = "";
-  gsmSms.receivedNumber(receivedNumber, 30);
+    char receivedNumber[30] = "";
+    gsmSms.receivedNumber(receivedNumber, 30);
 
-  Serial.println(F("Message received from: "));
-  Serial.println(receivedNumber);
+    Serial.println(F("Message received from: "));
+    Serial.println(receivedNumber);
 
-  char receivedContent[165] = "";
-  gsmSms.receivedContent(receivedContent, 165);
+    char receivedContent[165] = "";
+    gsmSms.receivedContent(receivedContent, 165);
 
-  Serial.println(F("Message contains: "));
-  Serial.println(receivedContent);
+    Serial.println(F("Message contains: "));
+    Serial.println(receivedContent);
 
-  gsmSms.messageFlush();	// Delete 'read', 'sent' and 'saved but unsent' messages.
+    gsmSms.messageFlush();    // Delete 'read', 'sent' and 'saved but unsent' messages.
 }
 ```
 
 # 4. Calling and receiving calls
 
 ```
-gsmPhone.callMake(PHONE_NUMBER, 10000);		// Pass a phone number and timeout in milliseconds.
+gsmPhone.callMake(PHONE_NUMBER, 10000);     // Pass a phone number and timeout in milliseconds.
 
 if (gsmPhone.callAvailable())
 {
-  char number[30] = "";
-  gsmPhone.receivedNumber(number, 30);
+    char number[30] = "";
+    gsmPhone.receivedNumber(number, 30);
 
-  char alert[50] = "";
-  sprintf(alert, "Call from %s available!", number);
+    char alert[50] = "";
+    sprintf(alert, "Call from %s available!", number);
 
-  Serial.println(alert);
+    Serial.println(alert);
 
-  gsmPhone.callAnswer();
+    gsmPhone.callAnswer();
 
-  delay(10000);
+    delay(10000);
 
-  gsmPhone.callDrop();
+    gsmPhone.callDrop();
 }
 
 ```
@@ -115,22 +115,22 @@ Serial.println(gpsData.course);
 ```
 gprs.openHttpConnection();
 ModuleSerialGprs::HttpResponse httpResponse = 
-  gprs.sendHttpRequest(HTTP_GET, "httpbin.org/get?param=1&param=2", 6000);	// Method, url and timeout in milliseconds.
+    gprs.sendHttpRequest(HTTP_GET, "httpbin.org/get?param=1&param=2", 6000);  // Method, url and timeout in milliseconds.
 
 if (httpResponse.statusCode == 200)
 {
-  Serial.println(F("Request successful!"));
+    Serial.println(F("Request successful!"));
 
-  char response[500] = "";
-  int length = httpResponse.contentLength + 50 > 500 ? 450 : httpResponse.contentLength;  // Read the first 450 characters of the response.
+    char response[500] = "";
+    int length = httpResponse.contentLength + 50 > 500 ? 450 : httpResponse.contentLength;  // Read the first 450 characters of the response.
 
-  gprs.readHttpResponse(length, response, 500);
+    gprs.readHttpResponse(length, response, 500);
 
-  Serial.println(response);
+    Serial.println(response);
 }
 else
 {
-  Serial.println(F("Request failed."));
+    Serial.println(F("Request failed."));
 }
 
 gprs.closeHttpConnection();

@@ -13,28 +13,28 @@
 class ModuleSerialGprs
 {
 public:
-	struct HttpResponse
-	{
-		int method;
-		int statusCode;
-		int contentLength;
-	};
+    struct HttpResponse
+    {
+        int method;
+        int statusCode;
+        int contentLength;
+    };
 
-	ModuleSerialGprs(ModuleSerialCore *core);
+    ModuleSerialGprs(ModuleSerialCore *core);
 
-	int enable(const char *apn, const char* username, const char *password);
-	void disable();
+    int enable(const char *apn, const char* username, const char *password);
+    void disable();
 
-	void openHttpConnection();
-	void closeHttpConnection();
+    void openHttpConnection();
+    void closeHttpConnection();
 
-	HttpResponse sendHttpRequest(int method, const char *url, unsigned long timeout);	
-	void readHttpResponse(int count, char *output, int size);
+    HttpResponse sendHttpRequest(int method, const char *url, unsigned long timeout);   
+    void readHttpResponse(int count, char *output, int size);
 private:
-	ModuleSerialCore *core = nullptr;
+    ModuleSerialCore *core = nullptr;
 
-	void parseHttpResponse(HttpResponse *httpResponse, char *response);
-	void parseReadContent(char *content);
+    void parseHttpResponse(HttpResponse *httpResponse, char *response);
+    void parseReadContent(char *content);
 };
 
 #endif 

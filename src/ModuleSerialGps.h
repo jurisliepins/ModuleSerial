@@ -9,28 +9,28 @@
 class ModuleSerialGps
 {
 public:
-	struct GpsData
-	{
-		int mode;
-		float lng, lat;
-		float alt;
-		char UTCTime[24];
-		char TTFF[24];
-		int sat;
-		float speed;
-		float course;
-	};
+    struct GpsData
+    {
+        int mode;
+        float lng, lat;
+        float alt;
+        char UTCTime[24];
+        char TTFF[24];
+        int sat;
+        float speed;
+        float course;
+    };
 
-	ModuleSerialGps(ModuleSerialCore *core);
+    ModuleSerialGps(ModuleSerialCore *core);
 
-	int enable();
-	void disable();
+    int enable();
+    void disable();
 
-	GpsData currentGpsData();
+    GpsData currentGpsData();
 private:
-	ModuleSerialCore *core = nullptr;
+    ModuleSerialCore *core = nullptr;
 
-	void parseGpsData(GpsData *gpsData, char *data);
+    void parseGpsData(GpsData *gpsData, char *data);
 };
 
 #endif 

@@ -8,21 +8,21 @@
 class ModuleSerialGsm_Phone : protected ModuleSerialGsm 
 {
 public:
-	ModuleSerialGsm_Phone(ModuleSerialCore *core);
+    ModuleSerialGsm_Phone(ModuleSerialCore *core);
 
-	int enable(const char *pin);
+    int enable(const char *pin);
 
-	bool callAvailable();
-	void callMake(const char *number, unsigned long timeout);
-	void callAnswer();
-	void callDrop();
+    bool callAvailable();
+    void callMake(const char *number, unsigned long timeout);
+    void callAnswer();
+    void callDrop();
 
-	void receivedNumber(char *output, int size);
+    void receivedNumber(char *output, int size);
 
 private:
-	char callNumber[CALL_NUMBER_LENGTH];
+    char callNumber[CALL_NUMBER_LENGTH];
 
-	void parseCall(char *call);
+    void parseCall(char *call);
 };
 
 #endif 
