@@ -1,12 +1,12 @@
 #include "ModuleSerialCore.h"
 
-ModuleSerialCore::ModuleSerialCore(int rxPin, int txPin) : SoftwareSerial::SoftwareSerial(rxPin, txPin)
+ModuleSerialCore::ModuleSerialCore(int rxPin, int txPin) : AltSoftSerial::AltSoftSerial(rxPin, txPin)
 {
 }
 
 ModuleSerialCore::~ModuleSerialCore()
 {
-    SoftwareSerial::end();
+    AltSoftSerial::end();
 }
 
 void ModuleSerialCore::debug(HardwareSerial *printer)
@@ -16,7 +16,7 @@ void ModuleSerialCore::debug(HardwareSerial *printer)
 
 int ModuleSerialCore::begin(int baudRate)
 {
-    SoftwareSerial::begin(baudRate);
+    AltSoftSerial::begin(baudRate);
 
     if (!writeCommand("AT", "OK", TIMEOUT))
     {
@@ -33,13 +33,13 @@ int ModuleSerialCore::begin(int baudRate)
 
 void ModuleSerialCore::end()
 {
-    SoftwareSerial::end();
+    AltSoftSerial::end();
 }
 
 bool ModuleSerialCore::writeCommand(const char *command, const char *expected, unsigned long timeout)
 {
-    SoftwareSerial::flush();
-    SoftwareSerial::println(command);
+    AltSoftSerial::flush();
+    AltSoftSerial::println(command);
 
     char response[BUF_LONG_LEN] = "";
     int i = 0;
@@ -48,9 +48,9 @@ bool ModuleSerialCore::writeCommand(const char *command, const char *expected, u
 
     do 
     {
-        while (SoftwareSerial::available())
+        while (AltSoftSerial::available())
         {
-            response[i++] = SoftwareSerial::read();
+            response[i++] = AltSoftSerial::read();
 
             if (i >= BUF_LONG_LEN - 1) 
             {
@@ -78,17 +78,17 @@ bool ModuleSerialCore::writeCommand(const char *command, const char *expected, u
 
 void ModuleSerialCore::writeCommand(const char *command, char *output, int size, unsigned long timeout)
 {
-    SoftwareSerial::flush();
-    SoftwareSerial::println(command);
+    AltSoftSerial::flush();
+    AltSoftSerial::println(command);
 
     unsigned long start = millis();
     int i = 0;
 
     do 
     {
-        while (SoftwareSerial::available())
+        while (AltSoftSerial::available())
         {
-            output[i++] = SoftwareSerial::read();
+            output[i++] = AltSoftSerial::read();
 
             if (i >= size - 1) 
             {
@@ -114,10 +114,10 @@ void ModuleSerialCore::writeCommand(const char *command, char *output, int size,
 
 int ModuleSerialCore::available()
 {
-    return SoftwareSerial::available();
+    return AltSoftSerial::available();
 }
 
 int ModuleSerialCore::read()
 {
-    return SoftwareSerial::read();
+    return AltSoftSerial::read();
 }

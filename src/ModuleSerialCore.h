@@ -2,7 +2,7 @@
 #define _ModuleSerialCore_H
 
 #include <Arduino.h>
-#include <SoftwareSerial.h>
+#include <AltSoftSerial.h>
 
 #define MODULE_FAIL -1
 #define MODULE_READY 0
@@ -17,7 +17,7 @@
 #define DELAY_MEDIUM 1000
 #define DELAY_SHORT 250 
 
-class ModuleSerialCore : public SoftwareSerial 
+class ModuleSerialCore : public AltSoftSerial
 {
 public:
     ModuleSerialCore(int rxPin, int txPin);
