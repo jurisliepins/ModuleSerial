@@ -6,7 +6,7 @@
 #define MESSAGE_NUMBER_LENGTH 30
 #define MESSAGE_CONTENT_LENGTH 165
 
-class ModuleSerialGsm_Sms : protected ModuleSerialGsm 
+class ModuleSerialGsm_Sms : public ModuleSerialGsm 
 {
 public:
     ModuleSerialGsm_Sms(ModuleSerialCore *core);
