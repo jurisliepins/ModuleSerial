@@ -1,4 +1,4 @@
-#include <ModuleSerialGps.h>
+#include "ModuleSerialGps.h"
 
 ModuleSerialGps::ModuleSerialGps(ModuleSerialCore *core)
 {
@@ -7,23 +7,28 @@ ModuleSerialGps::ModuleSerialGps(ModuleSerialCore *core)
 
 int ModuleSerialGps::enable()
 {
-    if (!core->writeCommand("AT+CGPSPWR=1", "OK", 2000))
+    if (!core->writeCommand("AT+CGPSPWR=1", "OK", TIMEOUT))
+    {
         return GPS_FAIL;
-    if (!core->writeCommand("AT+CGPSRST=0", "OK", 2000))
+    }
+
+    if (!core->writeCommand("AT+CGPSRST=0", "OK", TIMEOUT))
+    {
         return GPS_FAIL;
+    }
 
     return GPS_ENABLED;
 }
 
 void ModuleSerialGps::disable()
 {
-    core->writeCommand("AT+CGPSPWR=0", "OK", 2000);
+    core->writeCommand("AT+CGPSPWR=0", "OK", TIMEOUT);
 }
 
 ModuleSerialGps::GpsData ModuleSerialGps::currentGpsData()
 {
-    char response[200] = "";
-    core->writeCommand("AT+CGPSINF=0", response, 200, 2000);
+    char response[BUF_LONG_LEN] = "";
+    core->writeCommand("AT+CGPSINF=0", response, BUF_LONG_LEN, TIMEOUT);
 
     ModuleSerialGps::GpsData GpsData;
 
@@ -38,8 +43,8 @@ ModuleSerialGps::GpsData ModuleSerialGps::currentGpsData()
 void ModuleSerialGps::parseGpsData(ModuleSerialGps::GpsData *GpsData, char *data)
 {
     char *pch;
-    pch = strtok(data, " ,");
 
+    pch = strtok(data, " ,");
     pch = strtok(NULL, " ,");
     GpsData->mode = atoi(pch);
 

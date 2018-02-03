@@ -1,7 +1,7 @@
 #ifndef _ModuleSerialGprs_H
 #define _ModuleSerialGprs_H
 
-#include <ModuleSerialCore.h>
+#include "ModuleSerialCore.h"
 
 #define GPRS_FAIL -1 
 #define GPRS_ENABLED 0

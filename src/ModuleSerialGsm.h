@@ -1,7 +1,7 @@
 #ifndef _ModuleSerialGsm_H
 #define _ModuleSerialGsm_H
 
-#include <ModuleSerialCore.h>
+#include "ModuleSerialCore.h"
 
 #define GSM_FAIL -1 
 #define GSM_ENABLED 0

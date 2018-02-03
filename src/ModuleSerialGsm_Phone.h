@@ -3,9 +3,9 @@
 
 #define CALL_NUMBER_LENGTH 30
 
-#include <ModuleSerialGsm.h>
+#include "ModuleSerialGsm.h"
 
-class ModuleSerialGsm_Phone : protected ModuleSerialGsm 
+class ModuleSerialGsm_Phone : public ModuleSerialGsm 
 {
 public:
     ModuleSerialGsm_Phone(ModuleSerialCore *core);

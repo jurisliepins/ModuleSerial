@@ -1,28 +1,35 @@
-#include <ModuleSerialCore.h>
-#include <ModuleSerialGsm_Phone.h>
+#include "ModuleSerialCore.h"
+#include "ModuleSerialGsm_Phone.h"
 
 #define PIN_NUMBER ""
 
 #define LOCAL_PHONE ""
 #define REMOTE_PHONE ""
 
+#define BAUD_RATE 9600
+
+#define CALL_TIMEOUT 10000
+
+#define NUMBER_LEN 30
+#define ALERT_LEN 50
+
 ModuleSerialCore core(2, 3);            // Begin a SoftwareSerial connection on rx and tx pins.
 ModuleSerialGsm_Phone gsmPhone(&core);  // Pass a reference to the core.
 
 void setup() 
 {
-    Serial.begin(9600);
+    Serial.begin(BAUD_RATE);
     while (!Serial);
 
     Serial.println(F("Initializing..."));
 
     bool notConnected = true;
 
+    core.debug(&Serial);    // Pass a reference to HardwareSerial if you want debugging printed to the Serial Monitor.
+
     while (notConnected)
     {
-        core.debug(&Serial);    // Pass a reference to HardwareSerial if you want debugging printed to the Serial Monitor.
-
-        if (core.begin(9600) == MODULE_READY &&
+        if (core.begin(BAUD_RATE) == MODULE_READY &&
             gsmPhone.enable(PIN_NUMBER) == GSM_ENABLED)
         {
             notConnected = false;
@@ -34,11 +41,11 @@ void setup()
         }
     }
 
-    char alert[50] = "";
+    char alert[ALERT_LEN] = "";
     sprintf(alert, "Calling %s!", REMOTE_PHONE);
     Serial.println(alert);
 
-    gsmPhone.callMake(REMOTE_PHONE, 10000);     // Pass a phone number and timeout in milliseconds.
+    gsmPhone.callMake(REMOTE_PHONE, CALL_TIMEOUT);     // Pass a phone number and timeout in milliseconds.
 
     Serial.println(F("Dropping call."));
     gsmPhone.callDrop();
@@ -52,10 +59,10 @@ void loop()
 {
     if (gsmPhone.callAvailable())
     {
-        char number[30] = "";
-        gsmPhone.receivedNumber(number, 30);
+        char number[NUMBER_LEN] = "";
+        gsmPhone.receivedNumber(number, NUMBER_LEN);
 
-        char alert[50] = "";
+        char alert[ALERT_LEN] = "";
         sprintf(alert, "Call from %s available!", number);
         
         Serial.println(alert);

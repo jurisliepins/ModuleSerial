@@ -1,4 +1,4 @@
-#include <ModuleSerialGsm_Phone.h>
+#include "ModuleSerialGsm_Phone.h"
 
 ModuleSerialGsm_Phone::ModuleSerialGsm_Phone(ModuleSerialCore *core) : ModuleSerialGsm(core)
 {
@@ -11,7 +11,7 @@ int ModuleSerialGsm_Phone::enable(const char *pin)
         return GSM_FAIL;
     }
 
-    delay(2000);
+    delay(DELAY_LONG);
     ModuleSerialGsm::registerOnNetwork();
 
     return GSM_ENABLED;
@@ -19,15 +19,17 @@ int ModuleSerialGsm_Phone::enable(const char *pin)
 
 bool ModuleSerialGsm_Phone::callAvailable()
 {
-    char command[100] = "";
+    char command[BUF_MEDIUM_LEN] = "";
     int i = 0;
 
-    while (ModuleSerialGsm::core->SoftwareSerial::available())
+    while (ModuleSerialGsm::core->available())
     {
-        command[i++] = ModuleSerialGsm::core->SoftwareSerial::read();
-        if (i >= 99) 
+        command[i++] = ModuleSerialGsm::core->read();
+
+        if (i >= BUF_MEDIUM_LEN - 1) 
         {
             command[i] = '\0';
+
             return false;
         }
     }
@@ -43,7 +45,7 @@ bool ModuleSerialGsm_Phone::callAvailable()
 
 void ModuleSerialGsm_Phone::callMake(const char *number, unsigned long timeout)
 {
-    char command[40] = "";
+    char command[BUF_SHORT_LEN] = "";
     sprintf(command, "ATD%s;", number);
 
     if (!core->writeCommand(command, "+COLP:", timeout))
@@ -51,17 +53,17 @@ void ModuleSerialGsm_Phone::callMake(const char *number, unsigned long timeout)
         callDrop();
     }
 
-    delay(250);
+    delay(DELAY_SHORT);
 }
 
 void ModuleSerialGsm_Phone::callAnswer()
 {
-    core->writeCommand("ATA", "OK", 2000);  
+    core->writeCommand("ATA", "OK", TIMEOUT);  
 }
 
 void ModuleSerialGsm_Phone::callDrop()
 {
-    core->writeCommand("ATH", "OK", 2000);
+    core->writeCommand("ATH", "OK", TIMEOUT);
 }
 
 void ModuleSerialGsm_Phone::receivedNumber(char *output, int size)
@@ -83,7 +85,9 @@ void ModuleSerialGsm_Phone::parseCall(char *call)
     int j = 0;
     int k = 0;
 
-    while (call[++i] != '+' && call[i] != '\0');
+    while (call[++i] != '+' && call[i] != '\0')
+    ;
+    
     while (call[i] != '"' && call[i] != '\0')
     {
         callNumber[j++] = call[i++];

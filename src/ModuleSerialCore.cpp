@@ -1,7 +1,12 @@
-#include <ModuleSerialCore.h>
+#include "ModuleSerialCore.h"
 
-ModuleSerialCore::ModuleSerialCore(int rxPin, int txPin) : SoftwareSerial(rxPin, txPin)
+ModuleSerialCore::ModuleSerialCore(int rxPin, int txPin) : SoftwareSerial::SoftwareSerial(rxPin, txPin)
 {
+}
+
+ModuleSerialCore::~ModuleSerialCore()
+{
+    SoftwareSerial::end();
 }
 
 void ModuleSerialCore::debug(HardwareSerial *printer)
@@ -13,15 +18,22 @@ int ModuleSerialCore::begin(int baudRate)
 {
     SoftwareSerial::begin(baudRate);
 
-    if (!writeCommand("AT", "OK", 2000))
-        return MODULE_FAIL;
+    if (!writeCommand("AT", "OK", TIMEOUT))
+    {
+        return MODULE_FAIL;    
+    }
 
     if (printer != nullptr)
     {
-        writeCommand("AT+CMEE=1", "OK", 2000); // Set verbose error reporting.
+        writeCommand("AT+CMEE=1", "OK", TIMEOUT); // Set verbose error reporting.
     }
 
     return MODULE_READY;
+}
+
+void ModuleSerialCore::end()
+{
+    SoftwareSerial::end();
 }
 
 bool ModuleSerialCore::writeCommand(const char *command, const char *expected, unsigned long timeout)
@@ -29,7 +41,7 @@ bool ModuleSerialCore::writeCommand(const char *command, const char *expected, u
     SoftwareSerial::flush();
     SoftwareSerial::println(command);
 
-    char response[200] = "";
+    char response[BUF_LONG_LEN] = "";
     int i = 0;
 
     unsigned long start = millis();
@@ -39,7 +51,8 @@ bool ModuleSerialCore::writeCommand(const char *command, const char *expected, u
         while (SoftwareSerial::available())
         {
             response[i++] = SoftwareSerial::read();
-            if (i >= 199) 
+
+            if (i >= BUF_LONG_LEN - 1) 
             {
                 if (printer != nullptr)
                 {
@@ -47,6 +60,7 @@ bool ModuleSerialCore::writeCommand(const char *command, const char *expected, u
                 }
 
                 response[i] = '\0';
+
                 return false;
             }
         }
@@ -67,15 +81,15 @@ void ModuleSerialCore::writeCommand(const char *command, char *output, int size,
     SoftwareSerial::flush();
     SoftwareSerial::println(command);
 
-    int i = 0;
-    
     unsigned long start = millis();
+    int i = 0;
 
     do 
     {
         while (SoftwareSerial::available())
         {
             output[i++] = SoftwareSerial::read();
+
             if (i >= size - 1) 
             {
                 if (printer != nullptr)
@@ -84,6 +98,7 @@ void ModuleSerialCore::writeCommand(const char *command, char *output, int size,
                 }
 
                 output[i] = '\0';
+                
                 return;
             }
         }
@@ -95,4 +110,14 @@ void ModuleSerialCore::writeCommand(const char *command, char *output, int size,
     {
         printer->println(output);
     }
+}
+
+int ModuleSerialCore::available()
+{
+    return SoftwareSerial::available();
+}
+
+int ModuleSerialCore::read()
+{
+    return SoftwareSerial::read();
 }

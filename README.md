@@ -23,12 +23,12 @@ while (!Serial);
 
 Serial.println(F("Initializing..."));
 
+core.debug(&Serial);  // Pass a reference to HardwareSerial if you want debugging printed to the Serial Monitor.
+
 bool notConnected = true;
 
 while (notConnected)
 {
-    core.debug(&Serial);  // Pass a reference to HardwareSerial if you want debugging printed to the Serial Monitor.
-
     if (core.begin(9600) == MODULE_READY &&
         gsmSms.enable(PIN_NUMBER) == GSM_ENABLED &&
         gsmPhone.enable(PIN_NUMBER) == GSM_ENABLED &&

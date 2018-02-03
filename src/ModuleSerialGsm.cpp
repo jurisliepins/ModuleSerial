@@ -1,4 +1,4 @@
-#include <ModuleSerialGsm.h>
+#include "ModuleSerialGsm.h"
 
 ModuleSerialGsm::ModuleSerialGsm(ModuleSerialCore *core)
 {
@@ -7,8 +7,9 @@ ModuleSerialGsm::ModuleSerialGsm(ModuleSerialCore *core)
 
 ModuleSerialGsm::BatteryStatus ModuleSerialGsm::currentBatteryStatus()
 {
-    char response[50] = "";
-    core->writeCommand("AT+CBC", response, 50, 2000);
+    char response[BUF_SHORT_LEN] = "";
+
+    core->writeCommand("AT+CBC", response, BUF_SHORT_LEN, TIMEOUT);
 
     ModuleSerialGsm::BatteryStatus batteryStatus;
 
@@ -22,8 +23,9 @@ ModuleSerialGsm::BatteryStatus ModuleSerialGsm::currentBatteryStatus()
 
 int ModuleSerialGsm::currentSignalQuality()
 {
-    char response[30] = "";
-    core->writeCommand("AT+CSQ", response, 30, 2000);
+    char response[BUF_SHORT_LEN] = "";
+    
+    core->writeCommand("AT+CSQ", response, BUF_SHORT_LEN, TIMEOUT);
 
     int signalQuality = 0;
 
@@ -37,8 +39,9 @@ int ModuleSerialGsm::currentSignalQuality()
 
 void ModuleSerialGsm::currentNetwork(char *output)
 {
-    char response[50] = "";
-    core->writeCommand("AT+COPS?", response, 50, 2000);
+    char response[BUF_SHORT_LEN] = "";
+
+    core->writeCommand("AT+COPS?", response, BUF_SHORT_LEN, TIMEOUT);
 
     if (strstr(response, "+COPS:") != NULL)
     {
@@ -48,12 +51,12 @@ void ModuleSerialGsm::currentNetwork(char *output)
 
 bool ModuleSerialGsm::enterPin(const char *pin)
 {
-    if (!core->writeCommand("AT+CPIN?", "READY", 2000))
+    if (!core->writeCommand("AT+CPIN?", "READY", TIMEOUT))
     {
-        char command[25] = "";
+        char command[BUF_SHORT_LEN] = "";
         sprintf(command, "AT+CPIN=\"%s\"", pin);
 
-        return core->writeCommand(command, "OK", 2000);
+        return core->writeCommand(command, "OK", TIMEOUT);
     }
 
     return true;
@@ -62,15 +65,15 @@ bool ModuleSerialGsm::enterPin(const char *pin)
 void ModuleSerialGsm::registerOnNetwork()
 {
     while(
-        !core->writeCommand("AT+CREG?", "+CREG: 0,1", 2000) && 
-        !core->writeCommand("AT+CREG?", "+CREG: 0,5", 2000));
+        !core->writeCommand("AT+CREG?", "+CREG: 0,1", TIMEOUT) && 
+        !core->writeCommand("AT+CREG?", "+CREG: 0,5", TIMEOUT));
 }
 
 void ModuleSerialGsm::parseBatteryStatus(ModuleSerialGsm::BatteryStatus *batteryStatus, char *response)
 {
     char *pch;
-    pch = strtok(response, " ,");
 
+    pch = strtok(response, " ,");
     pch = strtok(NULL, " ,");
     batteryStatus->mode = atoi(pch);
 
@@ -84,21 +87,22 @@ void ModuleSerialGsm::parseBatteryStatus(ModuleSerialGsm::BatteryStatus *battery
 void ModuleSerialGsm::parseSignalQuality(int *signalQuality, char *response)
 {
     char *pch;
-    pch = strtok(response, " ,");
 
+    pch = strtok(response, " ,");
     pch = strtok(NULL, " ,");
+
     *signalQuality = atoi(pch);
 }
 
 void ModuleSerialGsm::parseNetwork(char *network, char *response)
 {
     char *pch;
+
     pch = strtok(response, " ,");
-
     pch = strtok(NULL, " ,");
     pch = strtok(NULL, " ,");
-
     pch = strtok(NULL, "\n");
+
     strcpy(network, pch);
     network[strlen(network) - 1] = '\0';
 }
