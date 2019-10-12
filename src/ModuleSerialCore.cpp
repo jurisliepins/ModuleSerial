@@ -24,6 +24,14 @@ int ModuleSerialCore::begin(int baudRate)
     return MODULE_READY;
 }
 
+int ModuleSerialCore::isReady()
+{
+    if (!writeCommand("AT", "OK", 2000))
+        return MODULE_FAIL;
+
+    return MODULE_READY;
+}
+
 bool ModuleSerialCore::writeCommand(const char *command, const char *expected, unsigned long timeout)
 {
     SoftwareSerial::flush();

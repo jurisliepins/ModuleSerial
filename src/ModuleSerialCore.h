@@ -14,6 +14,7 @@ public:
 
     void debug(HardwareSerial *printer);
     int begin(int baudRate);
+    int isReady();
 
     bool writeCommand(const char *command, const char *expected, unsigned long timeout);
     void writeCommand(const char *command, char *output, int size, unsigned long timeout);

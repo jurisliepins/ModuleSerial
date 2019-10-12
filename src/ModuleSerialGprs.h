@@ -23,6 +23,7 @@ public:
     ModuleSerialGprs(ModuleSerialCore *core);
 
     int enable(const char *apn, const char* username, const char *password);
+    int isReady();
     void disable();
 
     void openHttpConnection();

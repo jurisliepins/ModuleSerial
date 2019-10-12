@@ -32,6 +32,14 @@ int ModuleSerialGprs::enable(const char *apn, const char* username, const char *
     return GPRS_ENABLED;
 }
 
+int ModuleSerialGprs::isReady()
+{
+    if (!core->writeCommand("AT+CGATT=1", "OK", 2000))
+        return GPRS_FAIL;
+
+    return GPRS_ENABLED;
+}
+
 void ModuleSerialGprs::disable()
 {
     core->writeCommand("AT+CGATT=0", "+SAPBR 1: DEACT", 2000);
